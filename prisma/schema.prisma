@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String             @id @default(cuid())
+  name      String?
+  email     String             @unique
+  createdAt DateTime           @default(now())
+  sessions  InterviewSession[]
+}
+
+model InterviewSession {
+  id              String              @id @default(cuid())
+  userId          String?
+  user            User?               @relation(fields: [userId], references: [id])
+  targetRole      String
+  experienceLevel ExperienceLevel
+  jobDescription  String
+  cvText          String
+  interviewType   InterviewType
+  contextAnalysis Json?
+  status          SessionStatus       @default(DRAFT)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  questions       InterviewQuestion[]
+}
+
+model InterviewQuestion {
+  id                  String            @id @default(cuid())
+  sessionId           String
+  session             InterviewSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question            String
+  category            String
+  difficulty          Difficulty
+  whyThisQuestion     String?
+  expectedAnswerFocus Json
+  order               Int
+  createdAt           DateTime          @default(now())
+  answers             InterviewAnswer[]
+}
+
+model InterviewAnswer {
+  id         String            @id @default(cuid())
+  questionId String
+  question   InterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  transcript String
+  audioUrl   String?
+  score      Float
+  feedback   Json
+  createdAt  DateTime          @default(now())
+}
+
+enum ExperienceLevel {
+  FRESH_GRADUATE
+  JUNIOR
+  MID_LEVEL
+  SENIOR
+}
+
+enum InterviewType {
+  GENERAL_HR
+  TECHNICAL
+  BEHAVIORAL
+  FOUNDER
+  MIXED
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+enum SessionStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+}
