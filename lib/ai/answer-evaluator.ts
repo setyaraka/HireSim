@@ -20,7 +20,7 @@ export async function evaluateAnswer(input: unknown): Promise<AnswerFeedback> {
   assertAiConfigured();
   const response = await openai.chat.completions.create({
     model: AI_MODEL,
-    temperature: 0.25,
+    temperature: 0.1,
     max_tokens: 1600,
     messages: [
       { role: "system", content: answerEvaluatorSystem },

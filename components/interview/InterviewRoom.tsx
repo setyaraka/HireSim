@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Send, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +20,7 @@ type SessionView = {
 
 export function InterviewRoom({ initialSession }: { initialSession: SessionView }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [session, setSession] = useState(initialSession);
   const [question, setQuestion] = useState<InterviewQuestionView | null>(initialSession.questions.at(-1) ?? null);
   const [transcript, setTranscript] = useState("");
@@ -78,7 +79,13 @@ export function InterviewRoom({ initialSession }: { initialSession: SessionView 
   }
 
   useEffect(() => {
-    if (!question) void generateQuestion();
+    const shouldContinue = searchParams.get("next") === "1";
+    const currentQuestion = session.questions.at(-1);
+    const currentQuestionIsAnswered = Boolean(currentQuestion?.answers.length);
+
+    if (!question || (shouldContinue && currentQuestionIsAnswered)) {
+      void generateQuestion();
+    }
   }, []);
 
   return (

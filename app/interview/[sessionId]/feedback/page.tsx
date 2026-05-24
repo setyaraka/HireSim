@@ -32,8 +32,8 @@ export default function FeedbackPage() {
         <div className="rounded-lg border border-white/10 bg-white/[0.04] p-6 text-slate-300">No feedback found in this browser session.</div>
       )}
       <div className="mt-6 flex flex-wrap justify-end gap-3">
-        <Button variant="secondary" onClick={() => router.push(`/interview/${params.sessionId}`)}><RotateCcw size={18} />Try Again</Button>
-        <Button onClick={() => router.push(`/interview/${params.sessionId}`)}>Continue to Next Question <ArrowRight size={18} /></Button>
+        <Button variant="secondary" onClick={() => router.push(`/interview/${params.sessionId}?retry=1`)}><RotateCcw size={18} />Try Again</Button>
+        <Button onClick={() => router.push(`/interview/${params.sessionId}?next=1`)}>Continue to Next Question <ArrowRight size={18} /></Button>
       </div>
     </main>
   );

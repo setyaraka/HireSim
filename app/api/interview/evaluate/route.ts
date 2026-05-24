@@ -18,9 +18,18 @@ export async function POST(request: Request) {
 
     const feedback = await evaluateAnswer({
       target_role: session.targetRole,
+      experience_level: session.experienceLevel,
+      interview_type: session.interviewType,
       job_description: session.jobDescription,
       cv_summary: session.contextAnalysis,
-      question: question.question,
+      cv_text_excerpt: session.cvText.slice(0, 10000),
+      question: {
+        text: question.question,
+        category: question.category,
+        difficulty: question.difficulty,
+        expected_answer_focus: question.expectedAnswerFocus,
+        why_this_question: question.whyThisQuestion
+      },
       candidate_answer: payload.transcript
     });
 
